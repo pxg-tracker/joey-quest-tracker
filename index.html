@@ -2237,7 +2237,7 @@ const joeyDzInfo={
  "DZ Beartic":{players:3,category:"Bronze",availability:"stable",url:"https://wiki.pokexgames.com/index.php/DZ_Beartic"},
  "DZ Breloom":{players:3,category:"Silver",availability:"temporal",url:"https://wiki.pokexgames.com/index.php/DZ_Breloom"},
  "DZ Crustle":{players:3,category:"Silver",availability:"temporal",url:"https://wiki.pokexgames.com/index.php/DZ_Crustle"},
- "DZ Galvantula":{players:3,category:"Silver",availability:"temporal",url:"https://wiki.pokexgames.com/index.php/DZ_Galvantula"},
+ "DZ Galvantula":{players:3,category:"Bronze",availability:"stable",url:"https://wiki.pokexgames.com/index.php/DZ_Galvantula"},
  "DZ Giant Galvantula":{players:4,category:"Gold",availability:"temporal",url:"https://wiki.pokexgames.com/index.php/DZ_Giant_Galvantula"},
  "DZ Shiny Ferrothorn":{players:3,category:"Silver",availability:"temporal",url:"https://wiki.pokexgames.com/index.php/DZ_Shiny_Ferrothorn"},
  "DZ Ambipom":{players:3,category:"Silver",availability:"temporal",url:"https://wiki.pokexgames.com/index.php/DZ_Ambipom"},
@@ -2258,10 +2258,14 @@ function joeyZonesFromDetail(detail){
  if(detail.includes("Giant Galvantula")&&!zones.includes("DZ Giant Galvantula"))zones.push("DZ Giant Galvantula");
  return zones;
 }
-function joeyAvailabilityMarkup(detail){
- const zones=joeyZonesFromDetail(detail).map(zone=>joeyDzInfo[zone]).filter(Boolean);
- if(!zones.length)return "";
- const isStable=zones.every(info=>info.availability==="stable");
+function joeyAvailabilityMarkup(detail,pokemonName){
+ // La etiqueta de Joey Quest se basa en la DZ necesaria para ese Pokémon,
+ // no en una DZ adicional usada para otra misión (p. ej., Giant Galvantula para Mountain Quest).
+ let zones=joeyZonesFromDetail(detail);
+ if(pokemonName==="Galvantula")zones=zones.filter(zone=>zone!=="DZ Giant Galvantula");
+ const info=zones.map(zone=>joeyDzInfo[zone]).find(Boolean);
+ if(!info)return "";
+ const isStable=info.availability==="stable";
  return '<span class="joey-availability '+(isStable?'stable':'temporal')+'">'+(isStable?'● DZ estable':'◷ DZ temporal')+'</span>';
 }
 function joeyDetailMarkup(detail){
@@ -2644,7 +2648,7 @@ function render(){
   const rows=document.createElement("div");rows.className="rows";
   if(c.note){const note=document.createElement("p");note.className="notice";note.textContent=c.note;rows.appendChild(note);}
   filtered.forEach(x=>{const captured=state(x.id),row=document.createElement("div");row.className="pokemon"+(captured?" done":"");
-   row.innerHTML=`<div class="poke-info"><img class="poke-img" src="${spriteUrl(x.name)}" alt="${x.name}" loading="lazy" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='${spriteFallback(x.name)}'}else{this.style.display='none'}"><div><div class="poke-name"><a class="pokemon-wiki-link" href="${joeyPokemonWikiUrl(x.name)}" target="_blank" rel="noopener noreferrer" title="Abrir ${x.name} en la Wiki de PokeXGames">${x.name} <span aria-hidden="true">↗</span></a></div><div class="poke-sub">${x.detail}</div><div class="joey-pokemon-meta">${joeyAvailabilityMarkup(x.detail)}${joeyDetailMarkup(x.detail)}</div></div></div><label class="ball-count"><span>Poké Balls <span class="ball-count-note">(aprox.)</span></span><span class="ball-count-controls"><button type="button" class="ball-step" data-ball-step="-1" data-ball-name="${x.name}" aria-label="Restar una Poké Ball a ${x.name}" ${!canWrite?"disabled":""}>−</button><input type="number" min="0" step="1" inputmode="numeric" data-balls="${x.name}" value="${profiles[activeProfile]["pokeballs:"+x.name]===undefined?"":Math.max(0,Number(profiles[activeProfile]["pokeballs:"+x.name]||0))}" placeholder="—" aria-label="Cantidad aproximada de Poké Balls usadas para capturar ${x.name}" ${!canWrite?"disabled":""}><button type="button" class="ball-step" data-ball-step="1" data-ball-name="${x.name}" aria-label="Sumar una Poké Ball a ${x.name}" ${!canWrite?"disabled":""}>+</button></span></label><label class="check">Capturado<input type="checkbox" data-id="${x.id}" ${captured?"checked":""}></label>`;
+   row.innerHTML=`<div class="poke-info"><img class="poke-img" src="${spriteUrl(x.name)}" alt="${x.name}" loading="lazy" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='${spriteFallback(x.name)}'}else{this.style.display='none'}"><div><div class="poke-name"><a class="pokemon-wiki-link" href="${joeyPokemonWikiUrl(x.name)}" target="_blank" rel="noopener noreferrer" title="Abrir ${x.name} en la Wiki de PokeXGames">${x.name} <span aria-hidden="true">↗</span></a></div><div class="poke-sub">${x.detail}</div><div class="joey-pokemon-meta">${joeyAvailabilityMarkup(x.detail,x.name)}${joeyDetailMarkup(x.detail)}</div></div></div><label class="ball-count"><span>Poké Balls <span class="ball-count-note">(aprox.)</span></span><span class="ball-count-controls"><button type="button" class="ball-step" data-ball-step="-1" data-ball-name="${x.name}" aria-label="Restar una Poké Ball a ${x.name}" ${!canWrite?"disabled":""}>−</button><input type="number" min="0" step="1" inputmode="numeric" data-balls="${x.name}" value="${profiles[activeProfile]["pokeballs:"+x.name]===undefined?"":Math.max(0,Number(profiles[activeProfile]["pokeballs:"+x.name]||0))}" placeholder="—" aria-label="Cantidad aproximada de Poké Balls usadas para capturar ${x.name}" ${!canWrite?"disabled":""}><button type="button" class="ball-step" data-ball-step="1" data-ball-name="${x.name}" aria-label="Sumar una Poké Ball a ${x.name}" ${!canWrite?"disabled":""}>+</button></span></label><label class="check">Capturado<input type="checkbox" data-id="${x.id}" ${captured?"checked":""}></label>`;
    rows.appendChild(row);
   });
   head.setAttribute("role","button");head.setAttribute("tabindex","0");head.setAttribute("aria-expanded","true");head.setAttribute("aria-label","Mostrar u ocultar Pokémon del clan "+c.name);const toggleRows=()=>{rows.hidden=!rows.hidden;head.setAttribute("aria-expanded",String(!rows.hidden));};head.addEventListener("click",toggleRows);head.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggleRows();}});section.append(head,rows);root.appendChild(section);
