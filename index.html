@@ -3163,11 +3163,33 @@ getRedirectResult(auth).then(result=>{if(result?.user)setAuthStatus("Acceso con 
 document.getElementById("emailLogin").addEventListener("click",async()=>{const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value;if(!email||!password){alert("Escribe correo y contraseña.");return;}try{await signInWithEmailAndPassword(auth,email,password);}catch(e){alert("No se pudo iniciar sesión. Comprueba tus datos e inténtalo nuevamente.");}});
 document.getElementById("emailSignup").addEventListener("click",async()=>{const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value;if(!email||!password){alert("Escribe correo y una contraseña.");return;}if(password.length<6){alert("La contraseña debe tener al menos 6 caracteres.");return;}try{const result=await createUserWithEmailAndPassword(auth,email,password);await sendEmailVerification(result.user);alert("Cuenta creada. Revisa tu correo para verificar la dirección.");}catch(e){alert("No se pudo crear la cuenta. Comprueba los datos e inténtalo nuevamente.");}});
 document.getElementById("logout").addEventListener("click",()=>signOut(auth));
+function runTrackerIntegrityChecks(){
+ const checks=[];
+ const check=(name,ok)=>checks.push({name,ok:!!ok});
+ const weeks=Object.keys(rotationWeeks).map(Number).sort((a,b)=>a-b);
+ check("Rotación: nueve semanas",weeks.join(",")==="1,2,3,4,5,6,7,8,9");
+ check("Rotación: sin duplicados",weeks.every(w=>new Set(rotationWeeks[w]).size===rotationWeeks[w].length));
+ check("Mountain: doce objetivos",mountainItems.length===12);
+ const dz=Object.values(joeyDzInfo);
+ check("DZ: categorías y disponibilidad",dz.every(x=>["Bronze","Silver","Gold"].includes(x.category)&&["stable","temporal"].includes(x.availability)&&!!x.url));
+ check("DZ: clasificación 5/13/2",dz.filter(x=>x.category==="Bronze").length===5&&dz.filter(x=>x.category==="Silver").length===13&&dz.filter(x=>x.category==="Gold").length===2);
+ const weeklyIds=weeklyTaskGroups.flatMap(g=>g.tasks.map(t=>t.id));
+ check("Misiones: IDs semanales únicos",new Set(weeklyIds).size===weeklyIds.length);
+ check("Chosen One: cinco capítulos",chosenChapters.length===5&&new Set(chosenChapters.map(c=>c.id)).size===5);
+ const recipeItems=[...chosenShipCrafts,...chosenOutfitCrafts].flatMap(g=>g.recipes.flatMap(r=>r.items));
+ check("Chosen One: cantidades válidas",recipeItems.every(item=>!!chosenComponentRequired(item)&&chosenComponentRequired(item).amount>0));
+ check("Rotación: ancla válida",Number.isFinite(ROTATION_ANCHOR)&&new Date(ROTATION_ANCHOR).toISOString()==="2026-10-16T10:40:00.000Z");
+ return checks;
+}
 refreshProfileSelect();
 renderRotation();
 render();
 renderPlanner();
 renderChosenQuest();
+const trackerChecks=runTrackerIntegrityChecks(),failedTrackerChecks=trackerChecks.filter(x=>!x.ok);
+const buildDiagnostic=document.getElementById("buildStamp");
+if(buildDiagnostic)buildDiagnostic.textContent+=" · Integridad local: "+(failedTrackerChecks.length?"REVISAR "+failedTrackerChecks.map(x=>x.name).join(", "):"OK ("+trackerChecks.length+" pruebas)");
+console.info("PXG Tracker · comprobaciones de integridad",trackerChecks);
 
 document.getElementById("dashWeeklyBreakdown")?.addEventListener("click",e=>{const btn=e.target.closest("[data-weekly-jump]");if(btn)navigateToWeeklyTarget(btn.dataset.weeklyJump);});
 // Actualiza el indicador del dashboard cuando todas las misiones ya están definidas.
