@@ -3130,7 +3130,7 @@ function loadTrackerByProfile(){
     createSafetyBackup();const mergedProfiles={};
     for(const id of new Set([...Object.keys(cloud.profiles||{}),...Object.keys(localForMerge?.profiles||{})]))mergedProfiles[id]={...(cloud.profiles?.[id]||{}),...(localForMerge?.profiles?.[id]||{})};
     profiles=mergedProfiles;profileNames={...(cloud.profileNames||{}),...(localForMerge?.profileNames||{})};
-    activeProfile=(recoveryLocal?.activeProfile&&profiles[recoveryLocal.activeProfile])?recoveryLocal.activeProfile:(cloud.activeProfile&&profiles[cloud.activeProfile]?cloud.activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico"));
+    activeProfile=(localForMerge?.activeProfile&&profiles[localForMerge.activeProfile])?localForMerge.activeProfile:(cloud.activeProfile&&profiles[cloud.activeProfile]?cloud.activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico"));
     try{localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile,updatedAt:new Date().toISOString()}));}catch(e){}
     syncSafetyBlocked=false;refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
     setAuthStatus("Progreso local más reciente y nube fusionados con respaldo. Sincronizando cambios…");save();return;
