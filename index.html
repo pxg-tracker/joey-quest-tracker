@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-AF</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-31-A</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -2098,7 +2098,7 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>PXG Mission Tracker</h1>
-<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-20-U · esperando respuesta de Firebase…</p>
+<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-31-A · esperando respuesta de Firebase…</p>
 <script>
 (function(){
  window.addEventListener("error",function(event){
@@ -2106,19 +2106,19 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
   if(!el)return;
   const message=event.message||event.error?.message||"Error JavaScript sin detalle";
   const where=event.lineno?(" · línea "+event.lineno+(event.colno?":"+event.colno:"")):"";
-  el.textContent="Diagnóstico de versión: 2026-10-20-U · ERROR JAVASCRIPT: "+message+where;
+  el.textContent="Diagnóstico de versión: 2026-10-31-A · ERROR JAVASCRIPT: "+message+where;
  },true);
  window.addEventListener("unhandledrejection",function(event){
   const el=document.getElementById("buildStamp");
   if(!el)return;
   const reason=event.reason?.message||String(event.reason||"Rechazo de promesa sin detalle");
-  el.textContent="Diagnóstico de versión: 2026-10-20-U · ERROR DE INICIO: "+reason;
+  el.textContent="Diagnóstico de versión: 2026-10-31-A · ERROR DE INICIO: "+reason;
  });
  const started=Date.now();
  setTimeout(function(){
   const el=document.getElementById("buildStamp");
   if(!el||!el.textContent.includes("esperando respuesta de Firebase"))return;
-  el.textContent="Diagnóstico de versión: 2026-10-20-U · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
+  el.textContent="Diagnóstico de versión: 2026-10-31-A · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
  },12000);
 })();
 </script>
@@ -2205,7 +2205,7 @@ try{
 }catch(moduleError){
  const detail=moduleError?.message||String(moduleError);
  const stamp=document.getElementById("buildStamp");
- if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-U · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
+ if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-31-A · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
  const status=document.getElementById("authStatus");
  if(status){status.textContent="No se pudieron cargar los módulos de Firebase. No se modificaron ni borraron datos. Detalle: "+detail;status.hidden=false;status.classList.add("is-error");}
  console.error("No se pudieron cargar los módulos Firebase",moduleError);
@@ -2214,7 +2214,7 @@ try{
 const firebaseConfig={apiKey:"AIzaSyAr4p-w26_96-u4DPhCHY2fTYe1Zeufdc8",authDomain:"pxg-mission-tracker.firebaseapp.com",databaseURL:"https://pxg-mission-tracker-default-rtdb.firebaseio.com",projectId:"pxg-mission-tracker",storageBucket:"pxg-mission-tracker.firebasestorage.app",messagingSenderId:"418258644259",appId:"1:418258644259:web:7f3d4b57e74f9ef9acb096"};
 const firebaseApp=initializeApp(firebaseConfig);const auth=getAuth(firebaseApp);const db=getDatabase(firebaseApp);const googleProvider=new GoogleAuthProvider();
 function setAuthStatus(message){const el=document.getElementById("authStatus");if(!el)return;el.textContent=message||"";el.hidden=!message;el.classList.toggle("is-error",!!message&&/error|no se pudo|falló|fallo|denegad|bloquead|revisa/i.test(message));}
-function authErrorMessage(error){const code=error?.code||"";const messages={"auth/unauthorized-domain":"Este dominio no está autorizado en Firebase. Agrega nicoricotti.github.io en Authentication → Settings → Authorized domains.","auth/operation-not-allowed":"El acceso con Google no está habilitado en Firebase Authentication.","auth/popup-blocked":"El navegador bloqueó la ventana de Google. Voy a intentar abrir el acceso en esta misma pestaña.","auth/popup-closed-by-user":"Se cerró la ventana de Google antes de terminar el acceso.","auth/cancelled-popup-request":"Ya hay otra ventana de acceso abierta. Termina esa operación e inténtalo de nuevo.","auth/invalid-api-key":"Firebase rechazó la API key. Revisa que la clave del proyecto sea correcta y que no esté restringida para este dominio.","auth/network-request-failed":"No se pudo conectar con Firebase. Revisa tu conexión, bloqueadores o configuración de red.","auth/too-many-requests":"Hubo demasiados intentos. Espera un momento antes de volver a probar.","auth/account-exists-with-different-credential":"Ese correo ya tiene una cuenta con otro método de acceso."};return messages[code]||("Firebase: "+(error?.message||code||"error desconocido"));}
+function authErrorMessage(error){const code=error?.code||"";const messages={"auth/unauthorized-domain":"Este dominio no está autorizado en Firebase. Agrega pxg-tracker.github.io en Authentication → Settings → Authorized domains.","auth/operation-not-allowed":"El acceso con Google no está habilitado en Firebase Authentication.","auth/popup-blocked":"El navegador bloqueó la ventana de Google. Voy a intentar abrir el acceso en esta misma pestaña.","auth/popup-closed-by-user":"Se cerró la ventana de Google antes de terminar el acceso.","auth/cancelled-popup-request":"Ya hay otra ventana de acceso abierta. Termina esa operación e inténtalo de nuevo.","auth/invalid-api-key":"Firebase rechazó la API key. Revisa que la clave del proyecto sea correcta y que no esté restringida para este dominio.","auth/network-request-failed":"No se pudo conectar con Firebase. Revisa tu conexión, bloqueadores o configuración de red.","auth/too-many-requests":"Hubo demasiados intentos. Espera un momento antes de volver a probar.","auth/account-exists-with-different-credential":"Ese correo ya tiene una cuenta con otro método de acceso."};return messages[code]||("Firebase: "+(error?.message||code||"error desconocido"));}
 let toastTimeout=null;
 function showAchievement(message){const el=document.getElementById("achievementToast");if(!el)return;el.textContent=message;el.hidden=false;if(toastTimeout)clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>{el.hidden=true;},4200);}
 
@@ -3100,15 +3100,15 @@ const diagnosticStartedAt=Date.now();
 const firebaseReadWatchdog=setTimeout(()=>{
  if(firebaseReadFinished)return;
  const elapsed=Math.round((Date.now()-diagnosticStartedAt)/1000);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-U · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-31-A · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
  setAuthStatus("La página cargó Firebase, pero la lectura de datos aún no terminó. No se han cambiado ni borrado datos.");
 },12000);
 onValue(ref(db,".info/connected"),snapshot=>{
  const connected=snapshot.val()===true;
- if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-U · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
+ if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-31-A · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
 },err=>{
  console.error("No se pudo leer el estado de conexión de Firebase",err);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-U · error de conectividad Firebase: "+authErrorMessage(err);
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-31-A · error de conectividad Firebase: "+authErrorMessage(err);
 });
 let trackerLoadStarted=false;
 function loadTrackerByProfile(){
@@ -3116,34 +3116,32 @@ function loadTrackerByProfile(){
  const finishRead=(cloud,err)=>{
   if(firebaseReadFinished)return;
   firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);
-  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-U · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
+  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-31-A · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
   cloudReady=true;cloud.profiles=cloud.profiles||{};cloudHasData=Object.keys(cloud.profiles).length>0;
   const stamp=document.getElementById("buildStamp");
-  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-10-20-U · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
+  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-10-31-A · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
   let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
-  const candidates=readLocalBackupCandidates(local),recoveryLocal=candidates[0]||((local&&local.profiles)?local:null);
-  // Los respaldos históricos quedan para recuperación manual, nunca para fusionarse automáticamente.
-  const localForMerge=(local&&local.profiles)?local:null;
-  if(cloudHasData){
-   if(localHasMoreProgress(localForMerge,cloud)){
-    createSafetyBackup();const mergedProfiles={};
-    for(const id of new Set([...Object.keys(cloud.profiles||{}),...Object.keys(localForMerge?.profiles||{})]))mergedProfiles[id]={...(cloud.profiles?.[id]||{}),...(localForMerge?.profiles?.[id]||{})};
-    profiles=mergedProfiles;profileNames={...(cloud.profileNames||{}),...(localForMerge?.profileNames||{})};
-    activeProfile=(localForMerge?.activeProfile&&profiles[localForMerge.activeProfile])?localForMerge.activeProfile:(cloud.activeProfile&&profiles[cloud.activeProfile]?cloud.activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico"));
-    try{localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile,updatedAt:new Date().toISOString()}));}catch(e){}
-    syncSafetyBlocked=false;refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
-    setAuthStatus("Progreso local más reciente y nube fusionados con respaldo. Sincronizando cambios…");save();return;
-   }
-   syncSafetyBlocked=false;applyingCloud=true;profiles=cloud.profiles;profileNames=cloud.profileNames||profileNames;activeProfile=activeProfile&&profiles[activeProfile]?activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico");
-   try{localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile,updatedAt:cloud.updatedAt||null}));}catch(e){}applyingCloud=false;
-   refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();if(canWrite)setAuthStatus("Datos sincronizados desde la nube ✓");
-  }else if(trackerHasProgress(recoveryLocal)){
-   createSafetyBackup();profiles=recoveryLocal.profiles;profileNames=recoveryLocal.profileNames||profileNames;activeProfile=recoveryLocal.activeProfile||activeProfile;
-   try{localStorage.setItem(KEY,JSON.stringify({...recoveryLocal,profiles,profileNames,activeProfile}));}catch(e){}
-   syncSafetyBlocked=true;refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
-   setAuthStatus("RECUPERACIÓN LOCAL: Firebase aparece vacío, pero se encontró progreso en una copia de seguridad de este navegador. Se restauró localmente; la sincronización sigue bloqueada.");
-  }else{syncSafetyBlocked=false;maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}
+  // Firebase es la fuente de verdad cuando ya contiene perfiles. No fusionar booleanos
+   // locales: una casilla desmarcada se elimina y no deja tombstone; una copia antigua
+   // podría reactivar progreso que el usuario quitó desde otro dispositivo.
+   const localPrimary=(local&&local.profiles)?local:null;
+   if(cloudHasData){
+    syncSafetyBlocked=false;applyingCloud=true;
+    profiles=cloud.profiles;profileNames=cloud.profileNames||profileNames;
+    activeProfile=activeProfile&&profiles[activeProfile]?activeProfile:(cloud.activeProfile&&profiles[cloud.activeProfile]?cloud.activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico"));
+    try{localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile,updatedAt:cloud.updatedAt||null}));}catch(e){}
+    applyingCloud=false;
+    refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
+    if(canWrite)setAuthStatus("Datos sincronizados desde la nube ✓");
+   }else if(trackerHasProgress(localPrimary)){
+    // Con Firebase vacío se recupera solo la copia primaria; respaldos históricos
+    // quedan disponibles para recuperación manual y nunca se eligen por cantidad de checks.
+    createSafetyBackup();profiles=localPrimary.profiles;profileNames=localPrimary.profileNames||profileNames;activeProfile=localPrimary.activeProfile||activeProfile;
+    try{localStorage.setItem(KEY,JSON.stringify({...localPrimary,profiles,profileNames,activeProfile}));}catch(e){}
+    syncSafetyBlocked=true;refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
+    setAuthStatus("RECUPERACIÓN LOCAL: Firebase aparece vacío. Se conservó la copia principal; la sincronización sigue bloqueada para proteger los datos.");
+   }else{syncSafetyBlocked=false;maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}
  };
  const cloud={profiles:{},profileNames:{},profileOwners:{},activeProfile:"",updatedAt:null};let pending=0,settled=false;
  const fail=err=>{if(!settled){settled=true;finishRead(cloud,err);}};
