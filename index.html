@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-31-A</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-31-B</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -2098,7 +2098,7 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>PXG Mission Tracker</h1>
-<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-31-A · esperando respuesta de Firebase…</p>
+<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-31-B · esperando respuesta de Firebase…</p>
 <script>
 (function(){
  window.addEventListener("error",function(event){
@@ -2106,19 +2106,19 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
   if(!el)return;
   const message=event.message||event.error?.message||"Error JavaScript sin detalle";
   const where=event.lineno?(" · línea "+event.lineno+(event.colno?":"+event.colno:"")):"";
-  el.textContent="Diagnóstico de versión: 2026-10-31-A · ERROR JAVASCRIPT: "+message+where;
+  el.textContent="Diagnóstico de versión: 2026-10-31-B · ERROR JAVASCRIPT: "+message+where;
  },true);
  window.addEventListener("unhandledrejection",function(event){
   const el=document.getElementById("buildStamp");
   if(!el)return;
   const reason=event.reason?.message||String(event.reason||"Rechazo de promesa sin detalle");
-  el.textContent="Diagnóstico de versión: 2026-10-31-A · ERROR DE INICIO: "+reason;
+  el.textContent="Diagnóstico de versión: 2026-10-31-B · ERROR DE INICIO: "+reason;
  });
  const started=Date.now();
  setTimeout(function(){
   const el=document.getElementById("buildStamp");
   if(!el||!el.textContent.includes("esperando respuesta de Firebase"))return;
-  el.textContent="Diagnóstico de versión: 2026-10-31-A · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
+  el.textContent="Diagnóstico de versión: 2026-10-31-B · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
  },12000);
 })();
 </script>
@@ -2205,7 +2205,7 @@ try{
 }catch(moduleError){
  const detail=moduleError?.message||String(moduleError);
  const stamp=document.getElementById("buildStamp");
- if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-31-A · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
+ if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-31-B · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
  const status=document.getElementById("authStatus");
  if(status){status.textContent="No se pudieron cargar los módulos de Firebase. No se modificaron ni borraron datos. Detalle: "+detail;status.hidden=false;status.classList.add("is-error");}
  console.error("No se pudieron cargar los módulos Firebase",moduleError);
@@ -3104,15 +3104,15 @@ const diagnosticStartedAt=Date.now();
 const firebaseReadWatchdog=setTimeout(()=>{
  if(firebaseReadFinished)return;
  const elapsed=Math.round((Date.now()-diagnosticStartedAt)/1000);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-31-A · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-31-B · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
  setAuthStatus("La página cargó Firebase, pero la lectura de datos aún no terminó. No se han cambiado ni borrado datos.");
 },12000);
 onValue(ref(db,".info/connected"),snapshot=>{
  const connected=snapshot.val()===true;
- if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-31-A · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
+ if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-31-B · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
 },err=>{
  console.error("No se pudo leer el estado de conexión de Firebase",err);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-31-A · error de conectividad Firebase: "+authErrorMessage(err);
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-31-B · error de conectividad Firebase: "+authErrorMessage(err);
 });
 let trackerLoadStarted=false;
 function loadTrackerByProfile(){
@@ -3120,10 +3120,10 @@ function loadTrackerByProfile(){
  const finishRead=(cloud,err)=>{
   if(firebaseReadFinished)return;
   firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);
-  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-31-A · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
+  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-31-B · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
   cloudReady=true;cloud.profiles=cloud.profiles||{};cloudHasData=Object.keys(cloud.profiles).length>0;cloudProfileCache=JSON.parse(JSON.stringify(cloud.profiles));
   const stamp=document.getElementById("buildStamp");
-  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-10-31-A · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
+  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-10-31-B · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
   let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
   // Firebase es la fuente de verdad cuando ya contiene perfiles. No fusionar booleanos
