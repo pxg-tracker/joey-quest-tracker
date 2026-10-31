@@ -2299,7 +2299,7 @@ let activeProfile="nico";
 let firebaseUser=null,canWrite=false,canDelete=false,cloudReady=false,applyingCloud=false,migrationAttempted=false;
 // Los perfiles nuevos quedan vinculados al UID de quien los crea; los antiguos sin propietario solo los administran las cuentas autorizadas.
 const authorizedEmails=["nicoricotti94@gmail.com","daniel.guzba@gmail.com"];
-let profileOwners={};
+let profileOwners={},cloudProfileCache={};
 function ownsActiveProfile(){return !!firebaseUser&&profileOwners[activeProfile]===firebaseUser.uid;}
 function canRenameActiveProfile(){return canDelete||ownsActiveProfile();}
 function refreshPermissionButtons(){const rename=document.getElementById("renameProfile");if(rename)rename.disabled=!(canWrite&&canRenameActiveProfile());const del=document.getElementById("deleteProfile");if(del)del.disabled=!canDelete;}
@@ -2366,8 +2366,11 @@ function save(options={}){
   if(options.replaceActiveProfile){
    jobs.push(set(ref(db,"tracker/profiles/"+activeProfile),profile).catch(err=>{throw new Error("profiles/"+activeProfile+": "+authErrorMessage(err));}));
   }else{
-   const patch={};
+   const patch={},previous=cloudProfileCache[activeProfile]||{};
    for(const key of Object.keys(profile))patch[key]=profile[key];
+   // Firebase update necesita null explícito para borrar claves que se desmarcaron.
+   // Sin este tombstone, una casilla eliminada localmente reaparece al volver a leer la nube.
+   for(const key of Object.keys(previous))if(!Object.prototype.hasOwnProperty.call(profile,key))patch[key]=null;
    if(Object.keys(patch).length){
     jobs.push(update(ref(db,"tracker/profiles/"+activeProfile),patch).catch(err=>{throw new Error("profiles/"+activeProfile+": "+authErrorMessage(err));}));
    }else if(options.createEmptyProfile){
@@ -2376,7 +2379,7 @@ function save(options={}){
   }
   jobs.push(set(ref(db,"tracker/profileNames/"+activeProfile),profileNames[activeProfile]||activeProfile).catch(err=>{throw new Error("profileNames/"+activeProfile+": "+authErrorMessage(err));}));
   jobs.push(set(ref(db,"tracker/updatedAt"),updatedAt).catch(err=>{throw new Error("updatedAt: "+authErrorMessage(err));}));
-  Promise.all(jobs).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+String(err.message||authErrorMessage(err)));});
+  Promise.all(jobs).then(()=>{cloudProfileCache[activeProfile]={...profile};setAuthStatus("Sincronizado con la nube ✓");}).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+String(err.message||authErrorMessage(err)));});
  }else if(canWrite&&syncSafetyBlocked){
   setAuthStatus("Cambios guardados solo en este navegador: sincronización bloqueada para proteger datos.");
  }
@@ -3118,7 +3121,7 @@ function loadTrackerByProfile(){
   if(firebaseReadFinished)return;
   firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);
   if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-31-A · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
-  cloudReady=true;cloud.profiles=cloud.profiles||{};cloudHasData=Object.keys(cloud.profiles).length>0;
+  cloudReady=true;cloud.profiles=cloud.profiles||{};cloudHasData=Object.keys(cloud.profiles).length>0;cloudProfileCache=JSON.parse(JSON.stringify(cloud.profiles));
   const stamp=document.getElementById("buildStamp");
   if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-10-31-A · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
   let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
