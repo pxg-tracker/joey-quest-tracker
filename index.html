@@ -2259,16 +2259,14 @@ function joeyZonesFromDetail(detail){
  return zones;
 }
 function joeyAvailabilityMarkup(detail,pokemonName){
- // La etiqueta de Joey Quest se basa en la DZ necesaria para ese Pokémon,
- // no en una DZ adicional usada para otra misión (p. ej., Giant Galvantula para Mountain Quest).
+ // Galvantula normal permanece en Bronze; Giant Galvantula es otra DZ Gold.
  let zones=joeyZonesFromDetail(detail);
  if(pokemonName==="Galvantula")zones=zones.filter(zone=>zone!=="DZ Giant Galvantula");
  const info=zones.map(zone=>joeyDzInfo[zone]).find(Boolean);
- if(!info)return "";
- const isStable=info.category==="Bronze";
- const label=isStable?"● DZ estable":info.category==="Silver"?"↻ DZ rotativa":"◷ DZ Gold · fin de semana";
- const statusClass=isStable?"stable":info.category==="Silver"?"rotating":"temporal";
- return '<span class="joey-availability '+statusClass+'">'+label+'</span>';
+ if(!info)return '<span class="joey-availability pending" title="Clasificación pendiente de auditoría">? Disponibilidad por confirmar</span>';
+ const stable=info.availability==="stable",silver=info.category==="Silver";
+ const label=stable?"● DZ estable":silver?"↻ DZ rotativa":"◷ DZ Gold · fin de semana",status=stable?"stable":silver?"rotating":"temporal";
+ return '<span class="joey-availability '+status+'" title="Categoría '+info.category+' · fuente Wiki PXG">'+label+'</span>';
 }
 function joeyDetailMarkup(detail){
  const zones=joeyZonesFromDetail(detail);
