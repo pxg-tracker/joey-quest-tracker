@@ -2953,7 +2953,7 @@ function renderPlanner(){
  const unique=[...new Map(all().map(x=>[x.name,x])).values()];
  const missingJoey=unique.filter(x=>!all().some(y=>y.name===x.name&&state(y.id)));
  const missingMountain=mountainItems.filter(([d])=>!profiles[activeProfile]['mountain-ready:'+d]||Number(profiles[activeProfile][runKey(d)]||0)<15);
- const captured=unique.length-missingJoey.length;
+ const captured=unique.length-missingJoey.length,clanCaptureRows=all(),completedClanRows=clanCaptureRows.filter(x=>state(x.id)).length;
  const dungeonMatches=names.map(name=>{
    const mountain=mountainItems.find(x=>x[0].replace(/^DZ /,'')===name);
    const joey=missingJoey.filter(x=>x.name===name);
@@ -2962,7 +2962,7 @@ function renderPlanner(){
  });
  const priorityCount=dungeonMatches.filter(x=>x.score>0).length;
  const summary=document.getElementById('plannerSummary');
- summary.innerHTML='<div class="planner-stat"><strong>'+missingJoey.length+'</strong><span>Capturas pendientes</span></div><div class="planner-stat"><strong>'+missingMountain.length+'</strong><span>Objetivos Mountain</span></div><div class="planner-stat"><strong>'+priorityCount+'/'+names.length+'</strong><span>Dungeons útiles esta semana</span></div>';
+ summary.innerHTML='<div class="planner-stat"><strong>'+missingJoey.length+'</strong><span>Pokémon únicos pendientes</span></div><div class="planner-stat"><strong>'+completedClanRows+'/'+clanCaptureRows.length+'</strong><span>Registros Joey por clán</span></div><div class="planner-stat"><strong>'+missingMountain.length+'/12</strong><span>Objetivos Mountain por cerrar</span></div><div class="planner-stat"><strong>'+priorityCount+'/'+names.length+'</strong><span>Dungeons útiles esta semana</span></div>';
  document.getElementById('sidePendingCount').textContent=String(missingJoey.length+missingMountain.length);
  const sortedDungeons=[...dungeonMatches].sort((a,b)=>b.score-a.score||names.indexOf(a.name)-names.indexOf(b.name));
  document.getElementById('plannerDungeonList').innerHTML=sortedDungeons.map(entry=>{
