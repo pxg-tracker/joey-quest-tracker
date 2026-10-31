@@ -2326,19 +2326,22 @@ function trackerHasProgress(data){
  return Object.values(data.profiles).some(p=>p&&Object.values(p).some(v=>v===true||(typeof v==="number"&&v>0)||(typeof v==="string"&&v.length>0)));
 }
 function localHasMoreProgress(local,cloud){
- if(!local||!local.profiles)return false;
- if(!trackerHasProgress(cloud))return trackerHasProgress(local);
- const lp=local.profiles||{},cp=cloud.profiles||{};
- for(const [profile,values] of Object.entries(lp)){
-  const remote=cp[profile]||{};
-  for(const [key,value] of Object.entries(values||{})){
-   // Explicit false is meaningful for checkboxes: it records an intentional uncheck.
-   if(Object.prototype.hasOwnProperty.call(remote,key)&&remote[key]===value)continue;
-   const meaningful=value===false||value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0);
-   if(meaningful)return true;
+  if(!local||!local.profiles)return false;
+  // Evita que copias antiguas reactiven casillas que ya fueron desmarcadas en la nube.
+  const localTime=Date.parse(local.updatedAt||"");
+  const cloudTime=Date.parse(cloud?.updatedAt||"");
+  if(!Number.isFinite(localTime)||!Number.isFinite(cloudTime)||localTime<=cloudTime)return false;
+  if(!trackerHasProgress(cloud))return trackerHasProgress(local);
+  const lp=local.profiles||{},cp=cloud.profiles||{};
+  for(const [profile,values] of Object.entries(lp)){
+    const remote=cp[profile]||{};
+    for(const [key,value] of Object.entries(values||{})){
+      if(Object.prototype.hasOwnProperty.call(remote,key)&&remote[key]===value)continue;
+      const meaningful=value===false||value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0);
+      if(meaningful)return true;
+    }
   }
- }
- return false;
+  return false;
 }
 /*
  * REGLA DE SEGURIDAD PARA FUTURAS MEJORAS:
@@ -3120,15 +3123,17 @@ function loadTrackerByProfile(){
   let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
   const candidates=readLocalBackupCandidates(local),recoveryLocal=candidates[0]||((local&&local.profiles)?local:null);
+  // Los respaldos históricos quedan para recuperación manual, nunca para fusionarse automáticamente.
+  const localForMerge=(local&&local.profiles)?local:null;
   if(cloudHasData){
-   if(localHasMoreProgress(recoveryLocal,cloud)){
+   if(localHasMoreProgress(localForMerge,cloud)){
     createSafetyBackup();const mergedProfiles={};
-    for(const id of new Set([...Object.keys(cloud.profiles||{}),...Object.keys(recoveryLocal?.profiles||{})]))mergedProfiles[id]={...(cloud.profiles?.[id]||{}),...(recoveryLocal?.profiles?.[id]||{})};
-    profiles=mergedProfiles;profileNames={...(cloud.profileNames||{}),...(recoveryLocal?.profileNames||{})};
+    for(const id of new Set([...Object.keys(cloud.profiles||{}),...Object.keys(localForMerge?.profiles||{})]))mergedProfiles[id]={...(cloud.profiles?.[id]||{}),...(localForMerge?.profiles?.[id]||{})};
+    profiles=mergedProfiles;profileNames={...(cloud.profileNames||{}),...(localForMerge?.profileNames||{})};
     activeProfile=(recoveryLocal?.activeProfile&&profiles[recoveryLocal.activeProfile])?recoveryLocal.activeProfile:(cloud.activeProfile&&profiles[cloud.activeProfile]?cloud.activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico"));
     try{localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile,updatedAt:new Date().toISOString()}));}catch(e){}
     syncSafetyBlocked=false;refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
-    setAuthStatus("Progreso local y nube fusionados con respaldo. Sincronizando cambios…");save();return;
+    setAuthStatus("Progreso local más reciente y nube fusionados con respaldo. Sincronizando cambios…");save();return;
    }
    syncSafetyBlocked=false;applyingCloud=true;profiles=cloud.profiles;profileNames=cloud.profileNames||profileNames;activeProfile=activeProfile&&profiles[activeProfile]?activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico");
    try{localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile,updatedAt:cloud.updatedAt||null}));}catch(e){}applyingCloud=false;
