@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-11-01-F</title>
+<title>PXG Mission Tracker · diagnóstico 2026-11-01-G</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -2098,6 +2098,79 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
  border-radius:9px;
 }
 #clans .pokemon.done .check input{accent-color:var(--accent)}
+
+/* Consolidación visual transversal para Joey, Mountain, planificador y ciclos recurrentes. */
+:root{
+ --surface-raised:#1a2634;
+ --surface-soft:#17222f;
+ --border-soft:#304255;
+ --text-soft:#c2cfda;
+}
+#clans{display:grid;gap:12px}
+#clans .clan{
+ overflow:hidden;border:1px solid var(--border-soft);border-radius:16px;
+ background:linear-gradient(145deg,rgba(28,42,57,.96),rgba(18,27,38,.96));
+ box-shadow:0 8px 22px #00000018;
+}
+#clans .clan-head{padding:13px 15px;gap:12px}
+#clans .clan-heading{min-width:0}
+#clans .clan-title-line h2{letter-spacing:.01em}
+#clans .clan-meta{line-height:1.45}
+#clans .rows{padding:4px 10px 10px;display:grid;gap:7px}
+#clans .pokemon{margin:0;min-width:0}
+#clans .pokemon:not(.done){background:rgba(12,20,30,.30);border:1px solid rgba(68,88,108,.48);border-radius:11px;padding:8px 9px}
+#clans .pokemon.done{margin:0}
+#clans .poke-info{min-width:0}
+#clans .poke-name{line-height:1.35}
+#clans .poke-sub{line-height:1.4}
+#clans .ball-count{gap:5px}
+#clans .ball-count-controls{flex-shrink:0}
+#clans .check{white-space:nowrap}
+#mountain{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#mountain .mountain-card{min-width:0;margin:0;border:1px solid var(--border-soft);border-radius:16px;background:linear-gradient(145deg,#1a2938,#141e2a);overflow:hidden}
+#mountain .mountain-card.mountain-ready{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 15%,transparent) inset}
+#mountain .clan-head{padding:13px;align-items:flex-start}
+#mountain .mountain-object{min-width:0;gap:11px}
+#mountain .mountain-object>div{min-width:0}
+#mountain .mountain-status{flex-shrink:0}
+#mountain .rows{padding:0 12px 12px}
+#mountain .controls{gap:8px}
+#mountain .controls button{min-height:36px}
+#plannerPanel .planner-summary{gap:10px}
+#plannerPanel .planner-stat{border:1px solid var(--border-soft);background:linear-gradient(145deg,#1b2a39,#172230);border-radius:13px}
+#plannerPanel .planner-dungeons{display:grid;gap:8px}
+#plannerPanel .planner-dungeon{border:1px solid var(--border-soft);border-radius:12px;background:rgba(11,19,29,.34);transition:border-color .18s,background .18s}
+#plannerPanel .planner-dungeon-priority{border-color:rgba(242,200,121,.48);background:rgba(82,62,31,.16)}
+#plannerPanel .planner-dungeon-main{min-width:0}
+#plannerPanel .planner-dungeon-main small{line-height:1.45}
+#weeklyPanel .weekly-summary{margin-bottom:14px}
+#weeklyPanel .weekly-progress-overview{border:1px solid var(--border-soft);border-radius:15px;background:linear-gradient(145deg,#1b2a39,#151f2b);padding:15px}
+#weeklyPanel .weekly-groups{display:grid;gap:10px}
+#weeklyPanel .weekly-accordion,#weeklyPanel .weekly-clones-accordion{border:1px solid var(--border-soft);border-radius:14px;overflow:hidden;background:rgba(17,27,39,.72)}
+#weeklyPanel .weekly-accordion>summary,#weeklyPanel .weekly-clones-accordion>summary{padding:13px 15px}
+#weeklyPanel .weekly-accordion[open]>summary,#weeklyPanel .weekly-clones-accordion[open]>summary{border-bottom:1px solid var(--border-soft);background:rgba(39,57,74,.42)}
+#weeklyPanel .weekly-clone-accordion{border:1px solid rgba(72,95,119,.55);border-radius:11px;background:rgba(11,19,29,.3);margin:7px 0}
+#weeklyPanel .daily-mission-item{border:1px solid rgba(65,86,108,.55);border-radius:12px;background:rgba(17,27,39,.68);padding:11px 13px}
+#weeklyPanel .daily-mission-item.is-done{border-color:rgba(82,223,192,.52);background:rgba(35,76,67,.22)}
+#weeklyPanel .weekly-controls,#weeklyPanel .daily-mission-tools{gap:9px}
+@media(max-width:760px){
+ #mountain{grid-template-columns:1fr}
+ #clans .pokemon{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+ #clans .poke-info{grid-column:1/-1}
+ #clans .ball-count{grid-column:1}
+ #clans .check{grid-column:2;grid-row:2;align-self:end}
+ #mountain .mountain-object{flex-wrap:wrap}
+ #plannerPanel .planner-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:420px){
+ #plannerPanel .planner-summary{grid-template-columns:1fr 1fr}
+ #clans .clan-head{padding:11px}
+ #clans .rows{padding:3px 7px 8px}
+ #clans .ball-count{align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+ #clans *,#mountain *,#plannerPanel *,#weeklyPanel *{scroll-behavior:auto!important;transition:none!important}
+}
 </style>
 </head>
 <body><div class="app-shell">
@@ -2121,7 +2194,7 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>PXG Mission Tracker</h1>
-<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-11-01-F · esperando respuesta de Firebase…</p>
+<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-11-01-G · esperando respuesta de Firebase…</p>
 <script>
 (function(){
  window.addEventListener("error",function(event){
@@ -2129,19 +2202,19 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
   if(!el)return;
   const message=event.message||event.error?.message||"Error JavaScript sin detalle";
   const where=event.lineno?(" · línea "+event.lineno+(event.colno?":"+event.colno:"")):"";
-  el.textContent="Diagnóstico de versión: 2026-11-01-F · ERROR JAVASCRIPT: "+message+where;
+  el.textContent="Diagnóstico de versión: 2026-11-01-G · ERROR JAVASCRIPT: "+message+where;
  },true);
  window.addEventListener("unhandledrejection",function(event){
   const el=document.getElementById("buildStamp");
   if(!el)return;
   const reason=event.reason?.message||String(event.reason||"Rechazo de promesa sin detalle");
-  el.textContent="Diagnóstico de versión: 2026-11-01-F · ERROR DE INICIO: "+reason;
+  el.textContent="Diagnóstico de versión: 2026-11-01-G · ERROR DE INICIO: "+reason;
  });
  const started=Date.now();
  setTimeout(function(){
   const el=document.getElementById("buildStamp");
   if(!el||!el.textContent.includes("esperando respuesta de Firebase"))return;
-  el.textContent="Diagnóstico de versión: 2026-11-01-F · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
+  el.textContent="Diagnóstico de versión: 2026-11-01-G · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
  },12000);
 })();
 </script>
@@ -2228,7 +2301,7 @@ try{
 }catch(moduleError){
  const detail=moduleError?.message||String(moduleError);
  const stamp=document.getElementById("buildStamp");
- if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-F · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
+ if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-G · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
  const status=document.getElementById("authStatus");
  if(status){status.textContent="No se pudieron cargar los módulos de Firebase. No se modificaron ni borraron datos. Detalle: "+detail;status.hidden=false;status.classList.add("is-error");}
  console.error("No se pudieron cargar los módulos Firebase",moduleError);
@@ -3147,15 +3220,15 @@ const diagnosticStartedAt=Date.now();
 const firebaseReadWatchdog=setTimeout(()=>{
  if(firebaseReadFinished)return;
  const elapsed=Math.round((Date.now()-diagnosticStartedAt)/1000);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-F · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-G · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
  setAuthStatus("La página cargó Firebase, pero la lectura de datos aún no terminó. No se han cambiado ni borrado datos.");
 },12000);
 onValue(ref(db,".info/connected"),snapshot=>{
  const connected=snapshot.val()===true;
- if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-F · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
+ if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-G · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
 },err=>{
  console.error("No se pudo leer el estado de conexión de Firebase",err);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-F · error de conectividad Firebase: "+authErrorMessage(err);
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-G · error de conectividad Firebase: "+authErrorMessage(err);
 });
 let trackerLoadStarted=false;
 function loadTrackerByProfile(){
@@ -3163,10 +3236,10 @@ function loadTrackerByProfile(){
  const finishRead=(cloud,err)=>{
   if(firebaseReadFinished)return;
   firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);
-  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-F · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
+  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-G · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
   cloudReady=true;cloud.profiles=cloud.profiles||{};cloudHasData=Object.keys(cloud.profiles).length>0;cloudProfileCache=JSON.parse(JSON.stringify(cloud.profiles));
   const stamp=document.getElementById("buildStamp");
-  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-11-01-F · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
+  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-11-01-G · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
   let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
   // Firebase es la fuente de verdad cuando ya contiene perfiles. No fusionar booleanos
