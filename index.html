@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-11-01-E</title>
+<title>PXG Mission Tracker · diagnóstico 2026-11-01-F</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -2121,7 +2121,7 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>PXG Mission Tracker</h1>
-<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-11-01-E · esperando respuesta de Firebase…</p>
+<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-11-01-F · esperando respuesta de Firebase…</p>
 <script>
 (function(){
  window.addEventListener("error",function(event){
@@ -2129,19 +2129,19 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
   if(!el)return;
   const message=event.message||event.error?.message||"Error JavaScript sin detalle";
   const where=event.lineno?(" · línea "+event.lineno+(event.colno?":"+event.colno:"")):"";
-  el.textContent="Diagnóstico de versión: 2026-11-01-E · ERROR JAVASCRIPT: "+message+where;
+  el.textContent="Diagnóstico de versión: 2026-11-01-F · ERROR JAVASCRIPT: "+message+where;
  },true);
  window.addEventListener("unhandledrejection",function(event){
   const el=document.getElementById("buildStamp");
   if(!el)return;
   const reason=event.reason?.message||String(event.reason||"Rechazo de promesa sin detalle");
-  el.textContent="Diagnóstico de versión: 2026-11-01-E · ERROR DE INICIO: "+reason;
+  el.textContent="Diagnóstico de versión: 2026-11-01-F · ERROR DE INICIO: "+reason;
  });
  const started=Date.now();
  setTimeout(function(){
   const el=document.getElementById("buildStamp");
   if(!el||!el.textContent.includes("esperando respuesta de Firebase"))return;
-  el.textContent="Diagnóstico de versión: 2026-11-01-E · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
+  el.textContent="Diagnóstico de versión: 2026-11-01-F · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
  },12000);
 })();
 </script>
@@ -2228,7 +2228,7 @@ try{
 }catch(moduleError){
  const detail=moduleError?.message||String(moduleError);
  const stamp=document.getElementById("buildStamp");
- if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-E · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
+ if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-F · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
  const status=document.getElementById("authStatus");
  if(status){status.textContent="No se pudieron cargar los módulos de Firebase. No se modificaron ni borraron datos. Detalle: "+detail;status.hidden=false;status.classList.add("is-error");}
  console.error("No se pudieron cargar los módulos Firebase",moduleError);
@@ -2373,36 +2373,48 @@ function localHasMoreProgress(local,cloud){
  * (reinicio/importación), que deben crear copia de seguridad antes de ejecutarse.
  */
 /* GUARDARRAÍL DE DESARROLLO: las mejoras de misiones añaden claves namespaced y llaman save() normal. No usar replaceActiveProfile salvo reinicio/importación explícitos con copia de seguridad. El guardado por clave conserva campos remotos desconocidos por versiones antiguas. */
+const profileSaveQueues=new Map();
+function enqueueProfileSave(profileId,profileSnapshot,profileName,updatedAt,options={}){
+ const previousQueue=profileSaveQueues.get(profileId)||Promise.resolve();
+ const nextQueue=previousQueue.catch(()=>{}).then(async()=>{
+  const profileRef=ref(db,"tracker/profiles/"+profileId);
+  if(options.replaceActiveProfile){
+   await set(profileRef,profileSnapshot);
+  }else{
+   const patch={},previous=cloudProfileCache[profileId]||{};
+   for(const key of Object.keys(profileSnapshot))patch[key]=profileSnapshot[key];
+   // Tombstones explícitos conservan la semántica de desmarcado en Firebase.
+   for(const key of Object.keys(previous))if(!Object.prototype.hasOwnProperty.call(profileSnapshot,key))patch[key]=null;
+   if(Object.keys(patch).length)await update(profileRef,patch);
+   else if(options.createEmptyProfile)await set(profileRef,{});
+  }
+  await set(ref(db,"tracker/profileNames/"+profileId),profileName||profileId);
+  await set(ref(db,"tracker/updatedAt"),updatedAt);
+  // La caché se actualiza para el perfil capturado, nunca para el perfil que esté activo al resolver.
+  cloudProfileCache[profileId]={...profileSnapshot};
+ });
+ profileSaveQueues.set(profileId,nextQueue);
+ nextQueue.then(()=>{
+  if(profileSaveQueues.get(profileId)===nextQueue)profileSaveQueues.delete(profileId);
+  setAuthStatus("Sincronizado con la nube ✓");
+ }).catch(err=>{
+  if(profileSaveQueues.get(profileId)===nextQueue)profileSaveQueues.delete(profileId);
+  console.error(err);setAuthStatus("No se pudo sincronizar: "+String(err.message||authErrorMessage(err)));
+ });
+}
 function save(options={}){
- const updatedAt=new Date().toISOString();
- const payload={profiles,profileNames,activeProfile,updatedAt};
+ const profileId=activeProfile,updatedAt=new Date().toISOString();
+ const profileSnapshot={...(profiles[profileId]||{})};
+ const namesSnapshot={...profileNames};
+ const payload={profiles,profileNames:namesSnapshot,activeProfile:profileId,updatedAt};
  try{localStorage.setItem(KEY,JSON.stringify(payload));}catch(e){setAuthStatus("No se pudo guardar en este navegador; revisa el espacio disponible.");}
  refreshProfileSelect();render();
  if(typeof renderPlanner==="function")renderPlanner();
  if(typeof renderChosenQuest==="function")renderChosenQuest();
  if(canWrite&&cloudReady&&!applyingCloud&&!syncSafetyBlocked){
-  setAuthStatus("Guardando cambios en la nube…");
-  const profile=profiles[activeProfile]||{};
-  // No escribir nunca en un perfil que el usuario no administra; perfiles antiguos sin propietario solo los pueden modificar los administradores.
   if(!canDelete&&!ownsActiveProfile()){setAuthStatus("No se sincronizó: esta cuenta no es propietaria del perfil seleccionado.");return;}
-  const jobs=[];
-  if(options.replaceActiveProfile){
-   jobs.push(set(ref(db,"tracker/profiles/"+activeProfile),profile).catch(err=>{throw new Error("profiles/"+activeProfile+": "+authErrorMessage(err));}));
-  }else{
-   const patch={},previous=cloudProfileCache[activeProfile]||{};
-   for(const key of Object.keys(profile))patch[key]=profile[key];
-   // Firebase update necesita null explícito para borrar claves que se desmarcaron.
-   // Sin este tombstone, una casilla eliminada localmente reaparece al volver a leer la nube.
-   for(const key of Object.keys(previous))if(!Object.prototype.hasOwnProperty.call(profile,key))patch[key]=null;
-   if(Object.keys(patch).length){
-    jobs.push(update(ref(db,"tracker/profiles/"+activeProfile),patch).catch(err=>{throw new Error("profiles/"+activeProfile+": "+authErrorMessage(err));}));
-   }else if(options.createEmptyProfile){
-    jobs.push(set(ref(db,"tracker/profiles/"+activeProfile),{}).catch(err=>{throw new Error("profiles/"+activeProfile+": "+authErrorMessage(err));}));
-   }
-  }
-  jobs.push(set(ref(db,"tracker/profileNames/"+activeProfile),profileNames[activeProfile]||activeProfile).catch(err=>{throw new Error("profileNames/"+activeProfile+": "+authErrorMessage(err));}));
-  jobs.push(set(ref(db,"tracker/updatedAt"),updatedAt).catch(err=>{throw new Error("updatedAt: "+authErrorMessage(err));}));
-  Promise.all(jobs).then(()=>{cloudProfileCache[activeProfile]={...profile};setAuthStatus("Sincronizado con la nube ✓");}).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+String(err.message||authErrorMessage(err)));});
+  setAuthStatus("Guardando cambios en la nube…");
+  enqueueProfileSave(profileId,profileSnapshot,namesSnapshot[profileId]||profileId,updatedAt,options);
  }else if(canWrite&&syncSafetyBlocked){
   setAuthStatus("Cambios guardados solo en este navegador: sincronización bloqueada para proteger datos.");
  }
@@ -3135,15 +3147,15 @@ const diagnosticStartedAt=Date.now();
 const firebaseReadWatchdog=setTimeout(()=>{
  if(firebaseReadFinished)return;
  const elapsed=Math.round((Date.now()-diagnosticStartedAt)/1000);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-E · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-F · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
  setAuthStatus("La página cargó Firebase, pero la lectura de datos aún no terminó. No se han cambiado ni borrado datos.");
 },12000);
 onValue(ref(db,".info/connected"),snapshot=>{
  const connected=snapshot.val()===true;
- if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-E · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
+ if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-F · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
 },err=>{
  console.error("No se pudo leer el estado de conexión de Firebase",err);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-E · error de conectividad Firebase: "+authErrorMessage(err);
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-F · error de conectividad Firebase: "+authErrorMessage(err);
 });
 let trackerLoadStarted=false;
 function loadTrackerByProfile(){
@@ -3151,10 +3163,10 @@ function loadTrackerByProfile(){
  const finishRead=(cloud,err)=>{
   if(firebaseReadFinished)return;
   firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);
-  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-E · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
+  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-F · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
   cloudReady=true;cloud.profiles=cloud.profiles||{};cloudHasData=Object.keys(cloud.profiles).length>0;cloudProfileCache=JSON.parse(JSON.stringify(cloud.profiles));
   const stamp=document.getElementById("buildStamp");
-  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-11-01-E · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
+  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-11-01-F · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
   let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
   // Firebase es la fuente de verdad cuando ya contiene perfiles. No fusionar booleanos
