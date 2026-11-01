@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-11-01-A</title>
+<title>PXG Mission Tracker · diagnóstico 2026-11-01-B</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -2098,7 +2098,7 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>PXG Mission Tracker</h1>
-<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-11-01-A · esperando respuesta de Firebase…</p>
+<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-11-01-B · esperando respuesta de Firebase…</p>
 <script>
 (function(){
  window.addEventListener("error",function(event){
@@ -2106,19 +2106,19 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
   if(!el)return;
   const message=event.message||event.error?.message||"Error JavaScript sin detalle";
   const where=event.lineno?(" · línea "+event.lineno+(event.colno?":"+event.colno:"")):"";
-  el.textContent="Diagnóstico de versión: 2026-11-01-A · ERROR JAVASCRIPT: "+message+where;
+  el.textContent="Diagnóstico de versión: 2026-11-01-B · ERROR JAVASCRIPT: "+message+where;
  },true);
  window.addEventListener("unhandledrejection",function(event){
   const el=document.getElementById("buildStamp");
   if(!el)return;
   const reason=event.reason?.message||String(event.reason||"Rechazo de promesa sin detalle");
-  el.textContent="Diagnóstico de versión: 2026-11-01-A · ERROR DE INICIO: "+reason;
+  el.textContent="Diagnóstico de versión: 2026-11-01-B · ERROR DE INICIO: "+reason;
  });
  const started=Date.now();
  setTimeout(function(){
   const el=document.getElementById("buildStamp");
   if(!el||!el.textContent.includes("esperando respuesta de Firebase"))return;
-  el.textContent="Diagnóstico de versión: 2026-11-01-A · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
+  el.textContent="Diagnóstico de versión: 2026-11-01-B · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
  },12000);
 })();
 </script>
@@ -2176,7 +2176,7 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
   <p class="planner-footnote">Las misiones semanales se reinician los lunes a las 07:40 BRT. El Terror mensual tiene su propio ciclo. Las actividades diarias se reinician a medianoche según la fecha de Brasil/Santiago horario continental.</p>
 </section>
 
-<div class="tabs" id="missionTabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><section class="ball-average-card" aria-labelledby="ballAverageTitle"><div class="ball-average-heading"><div><span class="dashboard-overline">REGISTRO DE CAPTURAS</span><h2 id="ballAverageTitle">Promedio de Poké Balls utilizadas</h2><p>Se calcula solo con los valores registrados en este perfil y se actualiza al guardar nuevas capturas.</p></div><span class="ball-average-badge" id="ballAverageSamples">0 registros</span></div><div class="ball-average-grid"><div class="ball-average-stat"><span>Preevoluciones</span><strong id="ballAverageBase">—</strong><small id="ballAverageBaseCount">Sin datos</small></div><div class="ball-average-stat"><span>Etapas intermedias</span><strong id="ballAverageMiddle">—</strong><small id="ballAverageMiddleCount">Sin datos</small></div><div class="ball-average-stat"><span>Evoluciones finales</span><strong id="ballAverageFinal">—</strong><small id="ballAverageFinalCount">Sin datos</small></div></div><p class="ball-average-note" id="ballAverageNote">Registra las Balls aproximadas de tus capturas para comenzar a construir promedios con tus propios datos.</p></section><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div>
+<div class="tabs" id="missionTabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><section class="ball-average-card" aria-labelledby="ballAverageTitle"><div class="ball-average-heading"><div><span class="dashboard-overline">REGISTRO DE CAPTURAS</span><h2 id="ballAverageTitle">Promedio de Poké Balls utilizadas</h2><p>Promedio global: reúne los registros de Poké Balls de todos los perfiles compartidos, sin depender del perfil seleccionado.</p></div><span class="ball-average-badge" id="ballAverageSamples">0 registros</span></div><div class="ball-average-grid"><div class="ball-average-stat"><span>Preevoluciones</span><strong id="ballAverageBase">—</strong><small id="ballAverageBaseCount">Sin datos</small></div><div class="ball-average-stat"><span>Etapas intermedias</span><strong id="ballAverageMiddle">—</strong><small id="ballAverageMiddleCount">Sin datos</small></div><div class="ball-average-stat"><span>Evoluciones finales</span><strong id="ballAverageFinal">—</strong><small id="ballAverageFinalCount">Sin datos</small></div></div><p class="ball-average-note" id="ballAverageNote">Registra las Balls aproximadas de tus capturas para comenzar a construir promedios con tus propios datos.</p></section><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div>
 <section class="mountain-route-card" aria-label="Ruta completa de Dimensional Mountain">
  <div class="mountain-route-heading"><div><span class="planner-eyebrow">RUTA DE PROGRESO</span><h2>Ruta completa · Supreme Key</h2><p>Checklist de preparación y materiales para ordenar los pasos posteriores a las 12 dungeons. Marca solo lo que hayas completado y confirma los requisitos actuales en la Wiki antes de entregar o sacrificar objetos.</p></div><span class="planner-icon">⛰</span></div>
  <div id="mountainRouteSummary" class="mountain-route-summary"></div>
@@ -2205,7 +2205,7 @@ try{
 }catch(moduleError){
  const detail=moduleError?.message||String(moduleError);
  const stamp=document.getElementById("buildStamp");
- if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-A · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
+ if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-B · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
  const status=document.getElementById("authStatus");
  if(status){status.textContent="No se pudieron cargar los módulos de Firebase. No se modificaron ni borraron datos. Detalle: "+detail;status.hidden=false;status.classList.add("is-error");}
  console.error("No se pudieron cargar los módulos Firebase",moduleError);
@@ -2488,21 +2488,29 @@ function setDashboardPreference(key,value){
 
 const evolutionStageByPokemon={Darumaka:"base",Darmanitan:"final",Wingull:"base",Pelipper:"final",Cubchoo:"base",Beartic:"final",Shroomish:"base",Breloom:"final",Dwebble:"base",Crustle:"final",Joltik:"base",Galvantula:"final",Ferroseed:"base",Ferrothorn:"final",Timburr:"base",Gurdurr:"middle",Ambipom:"final",Lickilicky:"final",Heatmor:"single",Nosepass:"base",Probopass:"final",Hippopotas:"base",Hippowdon:"final",Drilbur:"base",Excadrill:"final",Emolga:"single",Axew:"base",Fraxure:"middle",Haxorus:"final",Poochyena:"base",Mightyena:"final",Skorupi:"base",Drapion:"final",Pawniard:"base",Bisharp:"final"};
 function getBallStatsAcrossProfiles(){
- const unique=[...new Map(all().map(x=>[x.name,x])).values()];
+ // La fuente del promedio es el registro de Balls de TODOS los perfiles cargados,
+ // no el perfil activo ni una lista derivada de los Pokémon actualmente renderizados.
  const groups={all:[],base:[],middle:[],final:[]};
- Object.entries(profiles||{}).forEach(([profileId,profileData])=>{
-  unique.forEach(p=>{
-   const raw=profileData&&profileData["pokeballs:"+p.name];
-   if(raw===undefined||raw===null||String(raw).trim()==="")return;
-   const n=Number(raw);if(!Number.isFinite(n)||n<=0)return;
+ const profileIds=Object.keys(profiles||{});
+ profileIds.forEach(profileId=>{
+  const profileData=profiles[profileId];
+  if(!profileData||typeof profileData!=="object")return;
+  Object.entries(profileData).forEach(([key,raw])=>{
+   if(!key.startsWith("pokeballs:")||raw===undefined||raw===null||String(raw).trim()==="")return;
+   const pokemonName=key.slice("pokeballs:".length).trim();
+   if(!pokemonName)return;
+   const n=Number(raw);
+   if(!Number.isFinite(n)||n<=0)return;
    groups.all.push(n);
-   const stage=evolutionStageByPokemon[p.name]||"single";
+   const stage=evolutionStageByPokemon[pokemonName]||"single";
    if(groups[stage])groups[stage].push(n);
   });
  });
  const averages={};
  Object.keys(groups).forEach(k=>{averages[k]=groups[k].length?groups[k].reduce((s,n)=>s+n,0)/groups[k].length:null;});
- averages.samples=groups.all.length;averages.groups=groups;
+ averages.samples=groups.all.length;
+ averages.profileCount=profileIds.length;
+ averages.groups=groups;
  return averages;
 }
 function updateBallAverages(){
@@ -2513,7 +2521,7 @@ function updateBallAverages(){
  put("ballAverageBase",avg(groups.base));put("ballAverageMiddle",avg(groups.middle));put("ballAverageFinal",avg(groups.final));
  count("ballAverageBaseCount",groups.base);count("ballAverageMiddleCount",groups.middle);count("ballAverageFinalCount",groups.final);
  const badge=document.getElementById("ballAverageSamples");if(badge)badge.textContent=groups.all.length+" registros globales";
- const note=document.getElementById("ballAverageNote");if(note)note.textContent=groups.all.length?"Promedios construidos con todos los registros disponibles de los perfiles compartidos, no solo del perfil seleccionado. Cada valor de una especie en cada perfil cuenta como muestra; se excluyen valores vacíos o iguales a cero.":"Aún no hay registros de Balls en los perfiles disponibles. Al ingresar capturas, los promedios globales se calcularán automáticamente.";
+ const note=document.getElementById("ballAverageNote");if(note)note.textContent=groups.all.length?"Promedios globales de todos los perfiles cargados. Cada registro de una especie en cada perfil cuenta como muestra; se excluyen valores vacíos o iguales a cero.":"Aún no hay registros de Balls en los perfiles disponibles. Al ingresar capturas, los promedios globales se calcularán automáticamente.";
 }
 function updateDashboard(uniquePokemon,total,mine){
  const joeyPct=total?Math.round(mine/total*100):0;
@@ -3104,15 +3112,15 @@ const diagnosticStartedAt=Date.now();
 const firebaseReadWatchdog=setTimeout(()=>{
  if(firebaseReadFinished)return;
  const elapsed=Math.round((Date.now()-diagnosticStartedAt)/1000);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-A · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-B · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
  setAuthStatus("La página cargó Firebase, pero la lectura de datos aún no terminó. No se han cambiado ni borrado datos.");
 },12000);
 onValue(ref(db,".info/connected"),snapshot=>{
  const connected=snapshot.val()===true;
- if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-A · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
+ if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-B · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
 },err=>{
  console.error("No se pudo leer el estado de conexión de Firebase",err);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-A · error de conectividad Firebase: "+authErrorMessage(err);
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-11-01-B · error de conectividad Firebase: "+authErrorMessage(err);
 });
 let trackerLoadStarted=false;
 function loadTrackerByProfile(){
@@ -3120,10 +3128,10 @@ function loadTrackerByProfile(){
  const finishRead=(cloud,err)=>{
   if(firebaseReadFinished)return;
   firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);
-  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-A · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
+  if(err){console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-11-01-B · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");return;}
   cloudReady=true;cloud.profiles=cloud.profiles||{};cloudHasData=Object.keys(cloud.profiles).length>0;cloudProfileCache=JSON.parse(JSON.stringify(cloud.profiles));
   const stamp=document.getElementById("buildStamp");
-  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-11-01-A · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
+  if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-11-01-B · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
   let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
   // Firebase es la fuente de verdad cuando ya contiene perfiles. No fusionar booleanos
